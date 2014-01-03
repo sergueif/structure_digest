@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+begin
+    require 'tree_structure_digest'
+rescue LoadError
+    require 'rubygems'
+    require 'tree_structure_digest'
+end
+
+$h = TreeStructureDigest::Digest.new.injest_yml_files(ARGV)
+puts $h.shorthand
