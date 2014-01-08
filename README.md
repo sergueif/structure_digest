@@ -1,6 +1,7 @@
 # TreeStructureDigest
 
-TODO: Write a gem description
+Run the binary with one or more YAML files to find out what it does
+
 
 ## Installation
 
@@ -18,9 +19,11 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+`tree_structure_digest example.yml`
 
 ## Contributing
+
+Could use a shorter name maybe
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
