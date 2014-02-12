@@ -2,6 +2,10 @@ require 'yaml'
 
 module TreeStructureDigest
   class Digest
+    def initialize(opts={})
+      @tree = opts[:tree] || false
+    end
+
     def injest_yml_files(file_paths)
       file_paths.each do |p|
         y = YAML.load_file(p)
@@ -33,7 +37,38 @@ module TreeStructureDigest
     end
 
     def shorthand
-      @abstract_paths.map(&:serialize).uniq
+      if @tree
+        root = {}
+        @abstract_paths.each do |apath|
+          append_to_tree(root, apath.parts)
+        end
+        sio = StringIO.new
+        pretty_print(sio, root)
+        sio.rewind
+        sio.read.chomp
+      else
+        @abstract_paths.map(&:serialize).uniq.sort.join("\n")
+      end
+    end
+
+    def pretty_print(io, tree, level=0)
+      tree.keys.sort.each do |k|
+        v = tree[k]
+        io << '  '*level + k
+        if v.keys.empty?
+          io << "\n"
+        elsif v.keys.size == 1
+          pretty_print(io, v, level)
+        else
+          io << "\n"
+          pretty_print(io, v, level+1)
+        end
+      end
+    end
+
+    def append_to_tree(tree, parts)
+      return if parts.empty?
+      append_to_tree(tree[parts.first.serialize] || (tree[parts.first.serialize] = {}), parts.drop(1))
     end
 
     private

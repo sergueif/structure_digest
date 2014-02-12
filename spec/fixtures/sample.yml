@@ -5,6 +5,17 @@ customer:
     given:   Dorothy
     family:  Gale
 
+problem:
+    return: true
+
+recursive:
+    problem:
+      que: 'what'
+      ans: 'who'
+    problem2:
+      que: 'a'
+      ans: 'b'
+
 items:
     - part_no:   A4786
       descrip:   Water Bucket (Filled)

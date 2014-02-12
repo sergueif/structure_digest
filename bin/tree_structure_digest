@@ -1,10 +1,29 @@
 #!/usr/bin/env ruby
-begin
-    require 'tree_structure_digest'
-rescue LoadError
-    require 'rubygems'
-    require 'tree_structure_digest'
+$LOAD_PATH << File.join(File.dirname(__FILE__), '../lib/')
+require 'tree_structure_digest'
+require 'tempfile'
+
+require 'optparse'
+ARGV << "--help" if ARGV.empty? && STDIN.tty?
+tree = false
+
+opt = OptionParser.new do |opt|
+  opt.banner = "Usage: tree_structure_digest [options] File1[, File2, ...]"
+  opt.on('-t', '--tree', 'replace repeated suffixes with indents') { tree = true }
 end
 
-$h = TreeStructureDigest::Digest.new.injest_yml_files(ARGV)
-puts $h.shorthand
+opt.parse!
+
+files = ARGV
+file = Tempfile.new('tree_structure_digest_in')
+if !STDIN.tty?
+  file.write STDIN.read
+  files += [file.path]
+  file.rewind
+end
+
+$h = TreeStructureDigest::Digest.new(tree: tree).injest_yml_files(files)
+print $h.shorthand
+
+file.close!
+
