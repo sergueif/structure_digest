@@ -1,4 +1,4 @@
-# TreeStructureDigest
+# StructureDigest
 
 Run the binary with one or more YAML files to find out what it does
 
@@ -7,7 +7,7 @@ Run the binary with one or more YAML files to find out what it does
 
 Add this line to your application's Gemfile:
 
-    gem 'tree_structure_digest'
+    gem 'structure_digest'
 
 And then execute:
 
@@ -15,7 +15,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install tree_structure_digest
+    $ gem install structure_digest
 
 ## Usage
 
@@ -55,7 +55,7 @@ Given a sample YAML document from Wikipedia:
         Pay no attention to the
         man behind the curtain.
 
-`tree_structure_digest example.yml` will produce:
+`structure_digest example.yml` will produce:
 
     .receipt
     .date

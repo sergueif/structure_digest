@@ -1,4 +1,4 @@
-module TreeStructureDigest
+module StructureDigest
   module SchemaParts
     class AbstractPath
       def initialize(abstract_parts)

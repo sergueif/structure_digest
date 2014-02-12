@@ -1,4 +1,4 @@
-module TreeStructureDigest
+module StructureDigest
   module SchemaParts
     class Value
       def initialize(val)

@@ -1,2 +1,2 @@
 gem 'pry'
-gem 'tree_structure_digest', path: '../'
+gem 'structure_digest', path: '../'

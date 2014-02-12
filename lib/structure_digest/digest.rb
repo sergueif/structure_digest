@@ -1,6 +1,6 @@
 require 'yaml'
 
-module TreeStructureDigest
+module StructureDigest
   class Digest
     def initialize(opts={})
       @tree = opts[:tree] || false

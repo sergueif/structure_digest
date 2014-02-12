@@ -1,11 +1,11 @@
 lib_path = File.join(File.dirname(__FILE__), '../lib/')
 $LOAD_PATH << lib_path
-require 'tree_structure_digest'
+require 'structure_digest'
 
-describe "tree_structure_digest" do
+describe "structure_digest" do
 
   def digest_fixture(file, opts={})
-    TreeStructureDigest::Digest.new(opts).injest_yml_files(
+    StructureDigest::Digest.new(opts).injest_yml_files(
       [File.expand_path("./fixtures/#{file}", File.dirname(__FILE__))]
     ).shorthand
   end
