@@ -9,6 +9,10 @@ module StructureDigest
         AbstractPath.new(@parts.map(&:abstract).compact)
       end
 
+      def serialize
+        @parts.map(&:serialize).join
+      end
+
       def add_part(part)
         Path.new(@parts + [part])
       end

@@ -5,6 +5,10 @@ module StructureDigest
         @value = val
       end
 
+      def serialize
+        "=#{@value}"
+      end
+
       def abstract
         nil
       end

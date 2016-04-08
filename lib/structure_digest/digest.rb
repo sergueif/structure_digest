@@ -6,10 +6,29 @@ module StructureDigest
       @tree = opts[:tree] || false
     end
 
+    def self.diff(h1,h2)
+      paths1 = []
+      paths2 = []
+      gather_paths(h1, paths1)
+      paths1 = paths1.map(&:serialize)
+      gather_paths(h2, paths2)
+      paths2 = paths2.map(&:serialize)
+
+      added = (paths2 - paths1)
+      removed = (paths1 - paths2)
+      (added + removed).sort.map do |p|
+        if removed.include?(p)
+          "- #{p}"
+        elsif added.include?(p)
+          "+ #{p}"
+        end
+      end
+    end
+
     def injest_yml_files(file_paths)
       file_paths.each do |p|
         y = YAML.load_file(p)
-        gather_paths(y, paths)
+        Digest.gather_paths(y, paths)
       end
       @abstract_paths = paths.map(&:abstract).uniq
       self
@@ -23,7 +42,7 @@ module StructureDigest
 
     def validate(hash)
       paths = []
-      gather_paths(hash, paths)
+      Digest.gather_paths(hash, paths)
       paths.all? do |p|
         print '.'
         @abstract_paths.any?{|my_p| my_p.accepts(p) } && validators_for(p).all?{|v| v.call(p.last[:value]) }
@@ -82,19 +101,27 @@ module StructureDigest
       @validators
     end
 
-    def gather_paths(node, solutions=[], partial_solution=SchemaParts::Path.new)
+    def self.gather_paths(node, solutions=[], partial_solution=SchemaParts::Path.new)
       if Array === node
-        node.each.with_index do |e, i|
-          gather_paths(e, solutions, partial_solution.add_part(SchemaParts::ArrayDereference.new(i)))
+        if node.empty?
+          solutions << (partial_solution.add_part(SchemaParts::Value.new(node)))
+        else
+          node.each.with_index do |e, i|
+            self.gather_paths(e, solutions, partial_solution.add_part(SchemaParts::ArrayDereference.new(i)))
+          end
         end
       elsif Hash === node
-        node.each do |k,v|
-          gather_paths(v, solutions, partial_solution.add_part(SchemaParts::HashDereference.new(k)))
+        if node.empty?
+          solutions << (partial_solution.add_part(SchemaParts::Value.new(node)))
+        else
+          node.each do |k,v|
+            self.gather_paths(v, solutions, partial_solution.add_part(SchemaParts::HashDereference.new(k)))
+          end
         end
       else
         solutions << (partial_solution.add_part(SchemaParts::Value.new(node)))
       end
-      self
+      nil
     end
 
     def deserialize(orig_shorthand)

@@ -10,6 +10,10 @@ module StructureDigest
         self.class == other.class && @index == other.index
       end
 
+      def serialize
+        "[#{@index}]"
+      end
+
       alias :eql? :==
       def hash; [@index].hash; end
       def abstract
